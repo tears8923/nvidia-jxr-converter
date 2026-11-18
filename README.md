@@ -33,6 +33,7 @@ This tool fixes both problems: it decodes the HDR data correctly, applies a prop
 
 - ✅ Converts `.jxr` (JPEG XR) HDR screenshots to **JPG** and/or **PNG**
 - ✅ Correct **HDR → SDR tone mapping** (Reinhard curve) — no blown-out highlights, no crushed blacks
+- ✅ Fast — pixel processing runs in compiled C# (a 2560×1600 image converts in ~1 second)
 - ✅ Batch processing — scans an entire folder recursively
 - ✅ Zero dependencies — uses only Windows built-in components
 - ✅ No network access, no telemetry, no installers
@@ -60,10 +61,11 @@ This tool fixes both problems: it decodes the HDR data correctly, applies a prop
 
 2. That's it. There is no installer.
 
-The two files must stay in the **same folder**:
+The three files must stay in the **same folder**:
 
 - `convert-jxr.bat` — the double-click launcher with a format menu
 - `jxr2sdr.ps1` — the conversion engine (PowerShell)
+- `JxrConverter.cs` — the C# pixel-processing engine (required for speed)
 
 ---
 
@@ -71,7 +73,7 @@ The two files must stay in the **same folder**:
 
 ### Double-click (beginner)
 
-1. Open the folder containing the two files.
+1. Open the folder containing the three files.
 2. **Double-click `convert-jxr.bat`**.
 3. A menu appears:
 
@@ -86,7 +88,7 @@ The two files must stay in the **same folder**:
 4. Press `1`, `2`, or `3` and hit Enter.
 5. Wait for `done: X converted` to appear.
 6. Press any key to close the window.
-7. Find your images in the `_converted` folder.
+7. Find your images in the `done` folder.
 
 By default, the tool scans `Videos\NVIDIA` recursively and converts **every** `.jxr` file it finds.
 
@@ -149,7 +151,7 @@ Open PowerShell in the project folder and run `jxr2sdr.ps1` directly.
 The conversion happens in four steps:
 
 1. **Decode** — Windows' built-in WIC (`BitmapDecoder`) decodes the `.jxr` file into **32-bit float RGB**, preserving the full HDR dynamic range.
-2. **Tone map** — a Reinhard curve (`v / (1 + 0.35·v)`) compresses the HDR luminance into the 0–1 range with a smooth highlight rolloff.
+2. **Tone map** — a Reinhard curve (`v / (1 + 0.35·v)`) compresses the HDR luminance into the 0–1 range with a smooth highlight rolloff. This step runs in **compiled C#** (`JxrConverter.cs`) for speed.
 3. **sRGB encode** — the standard sRGB transfer function (`1.055·v^(1/2.4) - 0.055`) is applied.
 4. **Encode** — the .NET `JpegBitmapEncoder` / `PngBitmapEncoder` writes a standard 8-bit image.
 
