@@ -33,11 +33,16 @@ This tool fixes both problems: it decodes the HDR data correctly, applies a prop
 
 - ✅ Converts `.jxr` (JPEG XR) HDR screenshots to **JPG** and/or **PNG**
 - ✅ Correct **HDR → SDR tone mapping** (Reinhard curve) — no blown-out highlights, no crushed blacks
+- ✅ **Graphical UI** (`JXR转格式.exe`) with drag-and-drop, live preview, progress bar, and cancel
+- ✅ **Right-click context menu** — convert `.jxr` files directly from Explorer
+- ✅ **Drag files onto the exe icon** — auto-loads them into the list
+- ✅ **3 tone-mapping presets** (Natural / Vivid / Filmic) + adjustable JPG quality
+- ✅ **Bilingual** — Chinese / English with one click
 - ✅ Fast — pixel processing runs in compiled C# (a 2560×1600 image converts in ~1 second)
+- ✅ Multi-threaded batch conversion (UI stays responsive)
 - ✅ Batch processing — scans an entire folder recursively
 - ✅ Zero dependencies — uses only Windows built-in components
 - ✅ No network access, no telemetry, no installers
-- ✅ Interactive menu + full command-line interface
 - ✅ Original files are never modified
 
 ---
@@ -53,15 +58,21 @@ This tool fixes both problems: it decodes the HDR data correctly, applies a prop
 
 ## Installation
 
-1. Download or clone this repository:
+1. Download the latest `JXR转格式.exe` from the [Releases](../../releases) page (or clone the repository).
 
    ```bash
    git clone https://github.com/tears8923/nvidia-jxr-converter.git
    ```
 
-2. That's it. There is no installer.
+2. There is no installer — just run `JXR转格式.exe`.
 
-The three files must stay in the **same folder**:
+### The standalone exe
+
+- `JXR转格式.exe` — the graphical app (all-in-one, no other files needed)
+
+### The script version (optional, for command-line use)
+
+These three files must stay in the **same folder**:
 
 - `convert-jxr.bat` — the double-click launcher with a format menu
 - `jxr2sdr.ps1` — the conversion engine (PowerShell)
@@ -71,28 +82,30 @@ The three files must stay in the **same folder**:
 
 ## Usage
 
-### Double-click (beginner)
+### GUI app (recommended)
 
-1. Open the folder containing the three files.
-2. **Double-click `convert-jxr.bat`**.
-3. A menu appears:
+1. **Double-click `JXR转格式.exe`**.
+2. The app auto-scans `Videos\NVIDIA` and lists all `.jxr` files.
+3. Drag more `.jxr` files onto the window, or use **Add Files / Add Folder**.
+4. Pick output format (JPG / PNG / Both), quality, and tone-mapping preset.
+5. Click **CONVERT**. Progress updates live; you can **Cancel** anytime.
+6. Click **Open Output Folder** to jump straight to the results.
 
-   ```
-   [1] JPG  - small size, good for WeChat / phone
-   [2] PNG  - lossless, best quality
-   [3] BOTH - export JPG and PNG together
+### Drag files onto the exe icon
 
-   Choose 1, 2 or 3:
-   ```
+Drag one or more `.jxr` files onto `JXR转格式.exe` in Explorer — the app opens with them pre-loaded.
 
-4. Press `1`, `2`, or `3` and hit Enter.
-5. Wait for `done: X converted` to appear.
-6. Press any key to close the window.
-7. Find your images in the `done` folder.
+### Right-click context menu (optional)
 
-By default, the tool scans `Videos\NVIDIA` recursively and converts **every** `.jxr` file it finds.
+To add "Convert to JPG / PNG" to the Explorer right-click menu for `.jxr` files:
 
-### Command line
+1. Right-click `install-context-menu.bat` → **Run as administrator**.
+2. Now right-click any `.jxr` file and choose **Convert to JPG**, **Convert to PNG**, or **Convert to JPG + PNG**.
+3. To remove it, run `uninstall-context-menu.bat` as administrator.
+
+> Move the exe before installing, since the menu stores the exe's path.
+
+### Script version (command line)
 
 Open PowerShell in the project folder and run `jxr2sdr.ps1` directly.
 
